@@ -4,11 +4,6 @@
 # 3. Add a vote count for each candidate.
 # 4. Get the total votes cast for each candidate.
 
-#The Data we need to retrive
-# 1. Get the total votes cast for the election.
-# 2. Write down the names of all the candidates.
-# 3. Add a vote count for each candidate.
-# 4. Get the total votes cast for each candidate.
 
 import csv
 import os
@@ -22,16 +17,14 @@ total_votes = 0
 
 # Candidate options and candidate votes.
 candidate_options = []
-candidate_votes = {}
-
-# County options and county votes.
 county_options = []
+candidate_votes = {}
 county_votes = {}
-
 
 # Track the winning county, vote count, and percentage.
 winning_county = ""
 winning_count_county = 0
+winning_percentage_county = 0
 
 # Track the winning candidate, vote count, and percentage.
 winning_candidate = ""
@@ -44,6 +37,7 @@ with open(file_to_load) as election_data:
     # Read the header row.
     headers = next(file_reader)
     # Print each row in the CSV file.   
+    
     for row in file_reader:
         # Add to the total vote count.
         total_votes += 1
@@ -52,21 +46,15 @@ with open(file_to_load) as election_data:
         candidate_name = row[2]
         # If the candidate does not match any existing candidate, add the
         # the candidate list.
-        if candidate_name not in candidate_options:
+        
+        if (candidate_name not in candidate_options) or (county_name not in county_options):
             # Add the candidate name to the candidate list.
             candidate_options.append(candidate_name)
             # And begin tracking that candidate's voter count.
             candidate_votes[candidate_name] = 0
-        # Add a vote to that candidate's count.
-        candidate_votes[candidate_name] += 1 
-        # If the county does not match any existing county,
-        # add the county to the county list. 
-        if county_name not in county_options:
-            # Add the county to the county list
             county_options.append(county_name)
-            # And begin tracking that county's vote count.
             county_votes[county_name] = 0
-        # Add a vote to county count. In this dictiionary County is a key, Vote i a value.
+        candidate_votes[candidate_name] += 1      
         county_votes[county_name] += 1
 print(county_votes)
 #print(county_options)
@@ -97,10 +85,11 @@ with open(file_to_save, "w") as txt_file:
         print(county_results)
         #  Save the candidate results to our text file
         txt_file.write(county_results)
-        # Determine winning vote count and winning county.
-        if (votes > winning_count_county):
+        # Determine winning vote count, winning percentage, and winning candidate.
+        if (votes > winning_count_county): #and (vote_percentage > winning_percentage_county):
             winning_count_county = votes
-            winning_county = county    
+            winning_county = county
+            #winning_percentage_county = vote_percentage
     # Print the winning candidate's results to the terminal.
     winning_county_summary = (
         f"-------------------------\n"
